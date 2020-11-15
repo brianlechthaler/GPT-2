@@ -4,6 +4,23 @@ testFunctions = True
 
 import datetime as dt
 
+class time:
+  def now(tz_str):
+    tz_now = dt.datetime.now(tz_str)
+    return tz_now
+  def timestamp():
+    rightnow = time.now(tz_str)
+    stamp = str(rightnow)# + ' // TZ: ' + str(tz_str)
+    return stamp
+
+class logger:
+  sep = ':'
+  def println(msg, lvl):
+    ln_timestamp = '@' + str(time.timestamp())
+    lvl = '[' + lvl + ']'
+    ln_str = ln_timestamp + sep + lvl + sep + msg + '\n'
+    print(ln_str)
+    
 class dep_resolve:
     def pip_install():
       !pip install -U kaggle 
@@ -32,49 +49,63 @@ class dep_resolve:
         print('note: skip_pip is not set to True or False, skipping pip.')
 
 class kaggle:
-  def kaggle_dl():
-    !mkdir -p /root/.kaggle
-    !mv kaggle.json /root/.kaggle/kaggle.json
-    !chmod 600 /root/.kaggle/kaggle.json
-    !rm -rf anime-subtitles.zip
-    !kaggle datasets download -d jef1056/anime-subtitles
-    !rm -rf 'Anime Datasets V3.zip'
-    !rm -rf 'input (Cleaned).txt'
-    !unzip anime-subtitles.zip
-    !wc -l 'input (Cleaned).txt'
-
-class time:
-  def now(tz_str):
-    tz_now = dt.datetime.now(tz_str)
-    return tz_now
-  def timestamp():
-    rightnow = time.now(tz_str)
-    stamp = str(rightnow)# + ' // TZ: ' + str(tz_str)
-    return stamp
-
-class logging:
-  sep = ':'
-  def println(msg, lvl):
-    ln_timestamp = '@' + str(time.timestamp())
-    lvl = '[' + lvl + ']'
-    ln_str = ln_timestamp + sep + lvl + sep + msg + '\n'
-    print(ln_str)
+  def log_err(msg):
+    logger.println(msg, 'ERR!')
+  def log_inf(msg)
+    logger.println(msg, 'INFO')
+  def kaggle_dl(dataset):
+    if dataset == 'anime-subtitles':
+      !mkdir -p /root/.kaggle
+      !mv kaggle.json /root/.kaggle/kaggle.json
+      !chmod 600 /root/.kaggle/kaggle.json
+      !kaggle datasets download -d jef1056/anime-subtitles
+      !unzip anime-subtitles.zip
+      !wc -l 'input (Cleaned).txt'
+      msg = 'input (Cleaned).txt'
+      log_inf(msg)
+    elif dataset == 'million-headlines':
+      !mkdir -p /root/.kaggle
+      !mv kaggle.json /root/.kaggle/kaggle.json
+      !chmod 600 /root/.kaggle/kaggle.json
+      !kaggle datasets download -d therohk/million-headlines
+      !unzip million-headlines.zip
+      !wc -l 'abcnews-date-text.csv' 
+      msg = 'abcnews-date-text.csv'
+      log_inf(msg)
+    else:
+      msg = 'No dataset or invalid dataset selected.'
+      log_err(msg)  
+  def kaggle_del(dataset):
+    if dataset == 'anime-subtitles':
+      !rm -rf anime-subtitles.zip
+      !rm -rf 'Anime Datasets V3.zip'
+      !rm -rf 'input (Cleaned).txt'
+      msg = 'Removed dataset: anime-subtitles'
+      log_inf(msg)
+    elif dataset == 'million-headlines':
+      !rm -rf million-headlines.zip
+      !rm -rf 'abcnews-date-text.csv'
+      msg = 'Removed dataset: million-headlines'
+      log_inf(msg)
+    else:
+      msg = 'No dataset or invalid dataset selected.'
+      log_inf(msg)
 
 class housekeeping:
   def cleandir(rm_model, rm_tokenizer_data):
     if rm_tokenizer_data == True:
       !rm -rf aitextgen-merges.txt
       !rm -rf aitextgen-vocab.json
-      logging.println('rm_tokenizer_data set to true, deleting tokenizer data at $PWD/aitextgen-merges.txt and $PWD/aitextgen-vocab.json', 'INFO')
+      logger.println('rm_tokenizer_data set to true, deleting tokenizer data at $PWD/aitextgen-merges.txt and $PWD/aitextgen-vocab.json', 'INFO')
     elif rm_tokenizer_data == False:
-      logging.println('rm_tokenizer_data set to false, skipping tokenizer data deletion.', 'WARN')
+      logger.println('rm_tokenizer_data set to false, skipping tokenizer data deletion.', 'WARN')
     if rm_model == True:
-      logging.println('rm_model is set to true, deleting model stored at trained_model.', 'INFO')
+      logger.println('rm_model is set to true, deleting model stored at trained_model.', 'INFO')
       !rm -rf /content/trained_model
     elif rm_model == False:
-      logging.println('rm_model set to False, skipping model deletion.', 'WARN')
+      logger.println('rm_model set to False, skipping model deletion.', 'WARN')
     else:
-      logging.println('rm_model not set to True or False, skipping model deletion.', 'WARN')
+      logger.println('rm_model not set to True or False, skipping model deletion.', 'WARN')
 
 class load:
   def load_csv(pth):
