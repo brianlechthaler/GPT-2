@@ -11,6 +11,8 @@ Fun with OpenAI's GPT-2
 * Colaboratory: https://colab.research.google.com/github/brianlechthaler/GPT-2/blob/origin/GPT_2_Kickstarter_Project_Names.ipynb
 ### Anime Subtitle Generator
 * Colaboratory Link: https://colab.research.google.com/github/brianlechthaler/GPT-2/blob/origin/GPT_2_Anime.ipynb
+### Medium Title Generator
+* Colaboratory: https://colab.research.google.com/github/brianlechthaler/GPT-2/blob/origin/GPT_2_MediumTitles.ipynb
 
 ## Credits
 
